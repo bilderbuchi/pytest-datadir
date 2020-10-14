@@ -19,3 +19,10 @@ def test_win32_longpath_idempotent(datadir):
     first = _win32_longpath(str(datadir))
     second = _win32_longpath(first)
     assert first == second
+
+
+@pytest.mark.skipif(not sys.platform.startswith("win"), reason='Only makes sense on Windows')
+def test_win32_longpath_unc(datadir):
+    unc_path = r'\\ComputerName\SharedFolder\Resource'
+    longpath = _win32_longpath(unc_path)
+    assert longpath.startswith('\\\\?\\UNC\\')
